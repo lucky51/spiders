@@ -10,7 +10,7 @@ driver = webdriver.Chrome()
 
 driver.get('https://tofo.me/')
 
-file_base_url = os.path.dirname(__file__)
+file_base_url = os.path.dirname(os.path.abspath(__file__))
 print file_base_url
 driver.find_element_by_class_name("card").click()
 imageRoot = 'https://x.gto.cc/'
