@@ -1,0 +1,12 @@
+app:
+ port: 3003
+ env: debug
+ docxExporterUrl: http://localhost:3002/file
+ account: wangfucheng
+ pagermybug: 50
+ # password md5
+ password: 
+storage:
+ redisServerAndPort: 127.0.0.1:6379
+job: 
+ cron: 10 17 * * 5

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>禅道 Weekly publication</title>
+    <script src="/www/bootstrap337/js/jquery.js"></script>
+    <script src="/www/moment.js"></script>
+    <script src="/www/moment-zh-cn.js"></script>
+    <script src="/www/bootstrap337/js/bootstrap.js"></script>
+    <script src="/www/bootstrap337/js/bootstrap-datetimepicker.js"></script>
+    <script src="/www/bootstrap337/js/locales/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
+    <script src="/www/md5.js"></script>
+    <link rel="stylesheet" href="/www/bootstrap337/css/bootstrap.css">
+    <link rel="stylesheet" href="/www/bootstrap337/css/bootstrap-sketchy.css">
+    <link rel="stylesheet" href="/www/bootstrap337/css/bootstrap-datetimepicker.css">
+
+    <link rel="stylesheet" href="/www/bootstrap337/css/sweetalert.css">
+    <script src="/www/bootstrap337/js/sweetalert.js"></script>
+    <link href="/www/animate.css" rel="stylesheet">
+    <style>
+        textarea {
+            resize: none;
+            color: coral;
+        }
+        .spider-title{
+            animation:animate__wobble;
+            animation-duration: 2s;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="text-danger  animate__animated animate__lightSpeedInLeft" style="display: inline-block;">
+            Weekly publication
+        </h1>
+        &nbsp;&nbsp;
+        <small style="display: inline-block;" class="animate__animated animate__jackInTheBox"> GIN framework</small>
+        <hr />
+        <div class="container">
+            <div class="col-xs-12 col-md-4 col-sm-4 col-lg-4 text-center" style="float: left;">
+                <img style="height:400px; max-width:100%;" class="animate__animated animate__bounceIn" src="/www/color.png" />
+            </div>
+            <div class="col-xs-12 col-md-4 col-sm-4 col-lg-4 " style="float: left;">
+                <form>
+
+                    <div class="form-group  ">
+                        <label for="acc" class="text-info animate__animated  animate__bounceIn">账 户:</label>
+                        <input type="text" autocomplete="on" class="form-control animate__animated animate__flipInX  " id="acc" placeholder="禅道账户名">
+                    </div>
+                    <div class="form-group ">
+                        <label for="pwd " class="text-info  animate__animated animate__bounceIn ">密 码:</label>
+                        <input type="password" class="form-control animate__animated  animate__flipInX" id="pwd" placeholder="禅道密码">
+                    </div>
+                    <hr>
+                    <div class="form-group">
+                        <label class="text-info  animate__animated  animate__bounceIn">开始日期:</label>
+                        <input class="beginTime form-control animate__animated animate__flipInX " readonly type="text">
+                    </div>
+                    <div class="form-group">
+                        <label class="text-info  animate__animated  animate__bounceIn">结束日期:</label>
+                        <input class="endTime form-control animate__animated  animate__flipInX" readonly type="text">
+                    </div>
+                    <hr>
+                    <div class="form-group">
+                        <label class="text-info  animate__animated  animate__bounceIn">MD5(readonly)</label>
+                        <textarea class="form-control animate__animated animate__flipInX " id="md5txt" readonly>
+
+                        </textarea>
+                    </div>
+                    <div class="form-group text-right">
+                        <button type="button" class="btn btn-outline-info animate__animated animate__swing animate__slow" id="gen" style="margin-top:5px;">点击生成</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</body>
+<script>
+    var Storage = {
+    };
+    Storage.set = function (name, val) {
+        localStorage.setItem(name, val);
+    };
+    Storage.get = function (name) {
+        return localStorage.getItem(name);
+    }
+    Storage.remove = function (name) {
+        localStorage.removeItem(name)
+    }
+    var beginTime = moment(new Date()).isoWeekday(1).format('YYYY-MM-DD 00:00');
+    var endTime = moment(new Date()).isoWeekday(7).format('YYYY-MM-DD 23:00');
+    var accCache = Storage.get("account");
+    if (accCache) {
+        $("#acc").val(accCache)
+    }
+
+    $(".beginTime").val(beginTime);
+    $(".endTime").val(endTime);
+    $(".beginTime").datetimepicker({
+        format: 'yyyy-mm-dd hh:ii',
+        autoclose: true,
+        weekStart: 1,
+        endDate: endTime,
+        language: "zh-CN"
+    }).on('changeDate', function (e) {
+        $('.endTime').datetimepicker('setStartDate', e.date);
+    });
+
+    $(".endTime").datetimepicker({
+        format: 'yyyy-mm-dd hh:ii',
+        autoclose: true,
+        weekStart: 1,
+        startDate: beginTime,
+        language: "zh-CN"
+    }).on('changeDate', function (e) {
+        $('.beginTime').datetimepicker("setEndDate", e.date);
+    });
+    $("#gen").click(function (e) {
+        e.preventDefault();
+        var acc = $("#acc").val();
+        if (acc == '') {
+            swal('', '请输入禅道账户名', 'error')
+            return;
+        }
+        var pwdval = $("#pwd").val()
+        if (pwdval == '') {
+            swal('', '请输入密码', 'error')
+            return;
+        }
+        var pwd = md5(pwdval);
+        $("#md5txt").text("");
+        $("#md5txt").text(pwd);
+
+        Storage.set("account", acc);
+        var weeklyURL = "/weekly?password=" + pwd + "&account=" + acc + "&beginTime=" + $('.beginTime').val() + "&endTime=" + $(".endTime").val();
+        window.open(weeklyURL)
+    });
+</script>
+
+</html>

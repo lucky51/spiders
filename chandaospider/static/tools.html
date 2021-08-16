@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tool</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.slim.min.js"></script>
+    <script src="/www/md5.js"></script>
+</head>
+<body>
+    密码:
+    <input type="password"  id="pwd">
+    <button type="button" id="convert">转换</button>
+    <input type="text"  style="width: 500px; color: red;" id="md5txt">
+
+</body>
+<script>
+    $("#convert").click(function(e){
+        e.preventDefault();
+        $("#md5txt").val("");
+        $("#md5txt").val(md5($("#pwd").val())) ;
+    });
+   
+</script>
+</html>
